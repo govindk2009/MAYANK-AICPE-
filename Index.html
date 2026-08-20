@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MAYANK AICPE - Login</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #eaf2ff, #f8fbff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.12);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: #1457d9;
+    }
+
+    .logo span {
+      color: #222;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #d5dbe5;
+      border-radius: 10px;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      margin-top: 20px;
+      border: 0;
+      background: #1457d9;
+      color: white;
+    }
+
+    .google-btn {
+      background: white;
+      border: 1px solid #d5dbe5;
+      color: #222;
+    }
+
+    .google-icon {
+      color: #4285F4;
+      font-size: 20px;
+      margin-right: 8px;
+    }
+
+    .or {
+      text-align: center;
+      color: #999;
+      margin: 22px 0;
+    }
+
+    .links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .links a {
+      color: #1457d9;
+      text-decoration: none;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 18px;
+      color: #1457d9;
+      font-size: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      margin-top: 22px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+  <div class="logo">
+    MAYANK <span>AICPE</span>
+  </div>
+
+  <p class="subtitle">
+    Online Learning & Examination Portal
+  </p>
+
+  <form id="loginForm">
+
+    <label>Email / Username</label>
+
+    <input
+      id="email"
+      type="text"
+      placeholder="Enter your email or username"
+      required
+    >
+
+    <label>Password</label>
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter your password"
+      required
+    >
+
+    <button class="login-btn" type="submit">
+      Login
+    </button>
+
+  </form>
+
+  <div class="or">
+    ───── OR ─────
+  </div>
+
+  <button class="google-btn" id="googleLogin">
+    <span class="google-icon">G</span>
+    Continue with Google
+  </button>
+
+  <div class="links">
+    <a href="#" id="forgot">Forgot Password?</a>
+    <a href="#" id="create">Create Account</a>
+  </div>
+
+  <div id="message"></div>
+
+  <div class="footer">
+    © 2026 MAYANK AICPE
+  </div>
+
+</div>
+
+
+<script type="module">
+
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+  } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+  // Firebase configuration
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBxoUfnmasNSEk52NWcQdmtPIDcYLC-GJI",
+    authDomain: "mayank-aicpe.firebaseapp.com",
+    projectId: "mayank-aicpe",
+    storageBucket: "mayank-aicpe.firebasestorage.app",
+    messagingSenderId: "291601983288",
+    appId: "1:291601983288:web:b1015c471113d9605403cd",
+    measurementId: "G-MXZQTR70L0"
+  };
+
+
+  // Initialize Firebase
+
+  const app = initializeApp(firebaseConfig);
+
+  const auth = getAuth(app);
+
+  const provider = new GoogleAuthProvider();
+
+
+  // Google Login
+
+  document
+    .getElementById("googleLogin")
+    .addEventListener("click", async () => {
+
+      const message = document.getElementById("message");
+
+      try {
+
+        const result = await signInWithPopup(
+          auth,
+          provider
+        );
+
+        const user = result.user;
+
+        message.innerHTML =
+          "Welcome, " + user.displayName + "!";
+
+        console.log("Logged in user:", user);
+
+        // Dashboard redirect later
+        // window.location.href = "dashboard.html";
+
+      } catch (error) {
+
+        console.error(error);
+
+        message.innerHTML =
+          "Google Login failed: " + error.message;
+
+      }
+
+    });
+
+
+  // Demo email/password button
+
+  document
+    .getElementById("loginForm")
+    .addEventListener("submit", (event) => {
+
+      event.preventDefault();
+
+      document.getElementById("message").innerHTML =
+        "Email/Password authentication will be connected next.";
+
+    });
+
+
+  document
+    .getElementById("forgot")
+    .addEventListener("click", (event) => {
+
+      event.preventDefault();
+
+      document.getElementById("message").innerHTML =
+        "Password recovery will be added next.";
+
+    });
+
+
+  document
+    .getElementById("create")
+    .addEventListener("click", (event) => {
+
+      event.preventDefault();
+
+      document.getElementById("message").innerHTML =
+        "Registration will be added next.";
+
+    });
+
+</script>
+
+</body>
+  </html>
